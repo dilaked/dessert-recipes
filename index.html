@@ -14,8 +14,7 @@
       height: 100vh;
       overflow-x: hidden;
       background: linear-gradient(135deg, #fff1e0, #ffe6cc);
-      background-size: cover;
-      transition: background 0.5s ease;
+      transition: background 0.7s ease;
     }
     .menu, .section {
       transition: all 0.5s ease;
@@ -36,7 +35,12 @@
       color: #5a3e36;
       font-weight: bold;
       box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      transition: transform 0.3s ease, opacity 0.5s ease, box-shadow 0.3s ease;
+      opacity: 0;
+      transform: scale(0.5);
+      animation: menuAppear 0.5s forwards;
+    }
+    @keyframes menuAppear {
+      to { opacity: 1; transform: scale(1); }
     }
     .section {
       display: none;
@@ -44,7 +48,8 @@
       max-width: 700px;
       margin: auto;
       opacity: 0;
-      transform: translateY(20px);
+      transform: translateY(30px);
+      transition: all 0.6s ease;
     }
     .section.show {
       display: block;
@@ -64,7 +69,7 @@
       align-items: center;
       cursor: pointer;
       overflow: hidden;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      transition: transform 0.3s ease, opacity 0.5s ease;
     }
     .recipe-thumb {
       background-color: #f3f3f3;
@@ -96,8 +101,8 @@
       padding: 1.5rem;
       margin-bottom: 2rem;
       opacity: 0;
-      transform: translateY(20px);
-      transition: all 0.5s ease;
+      transform: translateY(30px);
+      transition: all 0.6s ease;
     }
     .recipe-detail.show .recipe-card {
       opacity: 1;
@@ -132,9 +137,9 @@
 <body>
 
   <div class="menu" id="main-menu">
-    <button onclick="openCategory('cakes')">Торты</button>
-    <button onclick="openCategory('cookies')">Печенья</button>
-    <button onclick="openCategory('pastries')">Пирожные</button>
+    <button style="animation-delay:0s" onclick="openCategory('cakes')">Торты</button>
+    <button style="animation-delay:0.1s" onclick="openCategory('cookies')">Печенья</button>
+    <button style="animation-delay:0.2s" onclick="openCategory('pastries')">Пирожные</button>
   </div>
 
   <div id="cakes" class="section">
@@ -185,14 +190,13 @@
     function openCategory(id){
       const menu = document.getElementById('main-menu');
       menu.style.opacity = 0;
-      menu.style.transform = 'scale(0.8)';
-      setTimeout(()=>{ menu.style.display='none'; }, 500);
+      menu.style.transform = 'scale(0.5)';
+      setTimeout(()=> menu.style.display='none', 500);
 
       const section = document.getElementById(id);
       section.style.display = 'block';
       setTimeout(()=> section.classList.add('show'), 10);
 
-      // меняем фон в зависимости от категории
       if(id === 'cakes') document.body.style.background = 'linear-gradient(135deg, #fff1e0, #ffe6cc)';
       else if(id === 'cookies') document.body.style.background = 'linear-gradient(135deg, #fbe8c5, #f3d6a0)';
       else if(id === 'pastries') document.body.style.background = 'linear-gradient(135deg, #fff0f5, #ffe6f0)';
@@ -210,8 +214,6 @@
         menu.style.opacity=1;
         menu.style.transform='scale(1)';
       }, 10);
-
-      // возвращаем основной фон
       document.body.style.background = 'linear-gradient(135deg, #fff1e0, #ffe6cc)';
     }
 
