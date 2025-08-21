@@ -10,14 +10,12 @@
       margin: 0;
       display: flex;
       justify-content: center;
-      align-items: center;
-      height: 100vh;
-      overflow-x: hidden;
+      align-items: flex-start;
+      padding: 2rem;
       background: linear-gradient(135deg, #fff1e0, #ffe6cc);
-      transition: background 0.7s ease;
     }
     .menu, .section {
-      transition: all 0.5s ease;
+      transition: none;
     }
     .menu {
       display: flex;
@@ -35,26 +33,12 @@
       color: #5a3e36;
       font-weight: bold;
       box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      opacity: 0;
-      transform: scale(0.5);
-      animation: menuAppear 0.5s forwards;
-    }
-    @keyframes menuAppear {
-      to { opacity: 1; transform: scale(1); }
     }
     .section {
       display: none;
-      padding: 2rem;
+      padding: 1rem;
       max-width: 700px;
       margin: auto;
-      opacity: 0;
-      transform: translateY(30px);
-      transition: all 0.6s ease;
-    }
-    .section.show {
-      display: block;
-      opacity: 1;
-      transform: translateY(0);
     }
     .recipe-list {
       display: flex;
@@ -69,7 +53,6 @@
       align-items: center;
       cursor: pointer;
       overflow: hidden;
-      transition: transform 0.3s ease, opacity 0.5s ease;
     }
     .recipe-thumb {
       background-color: #f3f3f3;
@@ -94,19 +77,16 @@
       font-size: 0.9rem;
       color: #555;
     }
-    .recipe-detail .recipe-card {
+    .recipe-detail {
+      display: none;
+      padding: 1rem 0;
+    }
+    .recipe-card {
       background-color: #fff;
       border-radius: 12px;
       box-shadow: 0 4px 20px rgba(0,0,0,0.15);
       padding: 1.5rem;
       margin-bottom: 2rem;
-      opacity: 0;
-      transform: translateY(30px);
-      transition: all 0.6s ease;
-    }
-    .recipe-detail.show .recipe-card {
-      opacity: 1;
-      transform: translateY(0);
     }
     .recipe-img-placeholder {
       background-color: #f3f3f3;
@@ -127,29 +107,48 @@
       color: #d98558;
       font-weight: bold;
       text-decoration: none;
-      transition: color 0.3s ease;
-    }
-    .back-btn:hover {
-      color: #b56742;
     }
   </style>
 </head>
 <body>
 
   <div class="menu" id="main-menu">
-    <button style="animation-delay:0s" onclick="openCategory('cakes')">Торты</button>
-    <button style="animation-delay:0.1s" onclick="openCategory('cookies')">Печенья</button>
-    <button style="animation-delay:0.2s" onclick="openCategory('pastries')">Пирожные</button>
+    <button onclick="openCategory('cakes')">Торты</button>
+    <button onclick="openCategory('cookies')">Печенья</button>
+    <button onclick="openCategory('pastries')">Пирожные</button>
   </div>
 
   <div id="cakes" class="section">
     <a class="back-btn" onclick="backToMenu()">← Назад к категориям</a>
+
+    <h2>Чизкейки</h2>
     <div class="recipe-list">
       <div class="recipe-item" onclick="showRecipe('cake1','cakes')">
         <div class="recipe-thumb">Фото</div>
         <div class="recipe-info">
-          <div class="recipe-title">Тарт «Абрикос-розмарин»</div>
-          <div class="recipe-desc">Хрустящее тесто, миндальный крем и абрикосовый компоте...</div>
+          <div class="recipe-title">Клубничный чизкейк</div>
+          <div class="recipe-desc">Простая песочная основа, курд из лайма, ванильный чизкейк без выпечки...</div>
+        </div>
+      </div>
+      <div class="recipe-item" onclick="showRecipe('cake2','cakes')">
+        <div class="recipe-thumb">Фото</div>
+        <div class="recipe-info">
+          <div class="recipe-title">Порционный чизкейк «Сникерс»</div>
+          <div class="recipe-desc">Нежные порционные чизкейки с арахисовой карамелью и шоколадной глазурью...</div>
+        </div>
+      </div>
+      <div class="recipe-item" onclick="showRecipe('cake3','cakes')">
+        <div class="recipe-thumb">Фото</div>
+        <div class="recipe-info">
+          <div class="recipe-title">Ягодный чизкейк</div>
+          <div class="recipe-desc">С хрустящей основой сабле, плотной сырной массой и ягодной прослойкой...</div>
+        </div>
+      </div>
+      <div class="recipe-item" onclick="showRecipe('cake4','cakes')">
+        <div class="recipe-thumb">Фото</div>
+        <div class="recipe-info">
+          <div class="recipe-title">Японский хлопковый чизкейк</div>
+          <div class="recipe-desc">Очень нежный, пышный, влажный, мягкий и пушистый чизкейк...</div>
         </div>
       </div>
     </div>
@@ -158,22 +157,18 @@
       <a class="back-btn" onclick="backToList('cakes')">← Назад к списку</a>
       <div class="recipe-card">
         <div class="recipe-img-placeholder">Место для фото</div>
-        <div class="recipe-title">Тарт «Абрикос-розмарин»</div>
-        <div class="recipe-desc">Хрустящее песочное тесто, миндальный крем и компоте «Абрикос-розмарин».</div>
-        <div class="recipe-body">
-          <strong>Базовое песочное тесто:</strong><br>
-          - Мука — 200 гр<br>
-          - Сливочное масло — 120 гр<br>
-          - Сахарная пудра — 80 гр<br>
-          - Миндальная мука — 30 гр<br>
-          - Яйца — 30 гр<br>
-          - Щепотка соли<br>
-          - Ваниль (по желанию)<br><br>
-          <strong>Приготовление:</strong><br>
-          Холодное сливочное масло нарезать кубиком и саблировать с мукой до мелкой крошки на средней скорости. Добавить сахарную пудру, миндальную муку, соль и ваниль. Влить яйца и вымешивать до образования комков. Песочное тесто нельзя вымешивать слишком долго, чтобы тесто оставалось нежным.
-        </div>
+        <h3>Клубничный чизкейк</h3>
+        <p>Простая песочная основа, курд из лайма, лёгкий ванильный чизкейк без выпечки на основе крема «Патисьер», ароматное клубничное компоте</p>
+        <pre>Песочная основа:
+- Печенье песочное («Юбилейное») — 130 гр.
+- Сливочное масло — 60 гр.
+...
+(дальше весь рецепт)</pre>
       </div>
     </div>
+
+    <!-- Аналогично добавляем cake2, cake3, cake4 -->
+
   </div>
 
   <div id="cookies" class="section">
@@ -188,60 +183,20 @@
 
   <script>
     function openCategory(id){
-      const menu = document.getElementById('main-menu');
-      menu.style.opacity = 0;
-      menu.style.transform = 'scale(0.5)';
-      setTimeout(()=> menu.style.display='none', 500);
-
-      const section = document.getElementById(id);
-      section.style.display = 'block';
-      setTimeout(()=> section.classList.add('show'), 10);
-
-      if(id === 'cakes') document.body.style.background = 'linear-gradient(135deg, #fff1e0, #ffe6cc)';
-      else if(id === 'cookies') document.body.style.background = 'linear-gradient(135deg, #fbe8c5, #f3d6a0)';
-      else if(id === 'pastries') document.body.style.background = 'linear-gradient(135deg, #fff0f5, #ffe6f0)';
+      document.getElementById('main-menu').style.display='none';
+      document.getElementById(id).style.display='block';
     }
-
     function backToMenu(){
-      document.querySelectorAll('.section').forEach(sec => {
-        sec.classList.remove('show');
-        setTimeout(()=> sec.style.display='none', 500);
-        sec.querySelectorAll('.recipe-detail').forEach(detail => detail.classList.remove('show'));
-      });
-      const menu = document.getElementById('main-menu');
-      menu.style.display='flex';
-      setTimeout(()=> {
-        menu.style.opacity=1;
-        menu.style.transform='scale(1)';
-      }, 10);
-      document.body.style.background = 'linear-gradient(135deg, #fff1e0, #ffe6cc)';
+      document.querySelectorAll('.section').forEach(sec => sec.style.display='none');
+      document.getElementById('main-menu').style.display='flex';
     }
-
     function showRecipe(recipeId, sectionId){
-      const section = document.getElementById(sectionId);
-      const list = section.querySelector('.recipe-list');
-      list.style.opacity=0;
-      list.style.transform='translateY(-20px)';
-      setTimeout(()=> list.style.display='none', 500);
-
-      const recipe = section.querySelector('#'+recipeId);
-      recipe.style.display='block';
-      setTimeout(()=> recipe.classList.add('show'), 10);
+      document.querySelector('#'+sectionId+' .recipe-list').style.display='none';
+      document.getElementById(recipeId).style.display='block';
     }
-
     function backToList(sectionId){
-      const section = document.getElementById(sectionId);
-      const recipeDetails = section.querySelectorAll('.recipe-detail');
-      recipeDetails.forEach(detail => {
-        detail.classList.remove('show');
-        setTimeout(()=> detail.style.display='none', 500);
-      });
-      const list = section.querySelector('.recipe-list');
-      list.style.display='flex';
-      setTimeout(()=> {
-        list.style.opacity=1;
-        list.style.transform='translateY(0)';
-      }, 10);
+      document.getElementById(sectionId).querySelector('.recipe-detail').style.display='none';
+      document.getElementById(sectionId).querySelector('.recipe-list').style.display='flex';
     }
   </script>
 
