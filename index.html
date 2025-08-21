@@ -13,17 +13,12 @@
       align-items: center;
       height: 100vh;
       overflow-x: hidden;
-      background: linear-gradient(135deg, #fff1e0, #ffe6cc); /* десертный градиент */
+      background: linear-gradient(135deg, #fff1e0, #ffe6cc);
       background-size: cover;
+      transition: background 0.5s ease;
     }
     .menu, .section {
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 0.4s ease, transform 0.4s ease;
-    }
-    .menu.show, .section.show {
-      opacity: 1;
-      transform: translateY(0);
+      transition: all 0.5s ease;
     }
     .menu {
       display: flex;
@@ -37,24 +32,24 @@
       border: none;
       border-radius: 12px;
       cursor: pointer;
-      background: #f6c89f; /* мягкий карамельный цвет */
+      background: #f6c89f;
       color: #5a3e36;
       font-weight: bold;
       box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-    .menu button:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 6px 18px rgba(0,0,0,0.2);
+      transition: transform 0.3s ease, opacity 0.5s ease, box-shadow 0.3s ease;
     }
     .section {
       display: none;
       padding: 2rem;
       max-width: 700px;
       margin: auto;
+      opacity: 0;
+      transform: translateY(20px);
     }
-    .section.active {
+    .section.show {
       display: block;
+      opacity: 1;
+      transform: translateY(0);
     }
     .recipe-list {
       display: flex;
@@ -70,10 +65,6 @@
       cursor: pointer;
       overflow: hidden;
       transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-    .recipe-item:hover {
-      transform: scale(1.03);
-      box-shadow: 0 6px 24px rgba(0,0,0,0.15);
     }
     .recipe-thumb {
       background-color: #f3f3f3;
@@ -104,6 +95,13 @@
       box-shadow: 0 4px 20px rgba(0,0,0,0.15);
       padding: 1.5rem;
       margin-bottom: 2rem;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.5s ease;
+    }
+    .recipe-detail.show .recipe-card {
+      opacity: 1;
+      transform: translateY(0);
     }
     .recipe-img-placeholder {
       background-color: #f3f3f3;
@@ -133,7 +131,7 @@
 </head>
 <body>
 
-  <div class="menu show" id="main-menu">
+  <div class="menu" id="main-menu">
     <button onclick="openCategory('cakes')">Торты</button>
     <button onclick="openCategory('cookies')">Печенья</button>
     <button onclick="openCategory('pastries')">Пирожные</button>
@@ -151,7 +149,7 @@
       </div>
     </div>
 
-    <div class="recipe-detail" id="cake1" style="display:none;">
+    <div class="recipe-detail" id="cake1">
       <a class="back-btn" onclick="backToList('cakes')">← Назад к списку</a>
       <div class="recipe-card">
         <div class="recipe-img-placeholder">Место для фото</div>
@@ -175,25 +173,7 @@
 
   <div id="cookies" class="section">
     <a class="back-btn" onclick="backToMenu()">← Назад к категориям</a>
-    <div class="recipe-list">
-      <div class="recipe-item" onclick="showRecipe('cookie1','cookies')">
-        <div class="recipe-thumb">Фото</div>
-        <div class="recipe-info">
-          <div class="recipe-title">Шоколадное печенье</div>
-          <div class="recipe-desc">Мягкое внутри, хрустящее снаружи...</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="recipe-detail" id="cookie1" style="display:none;">
-      <a class="back-btn" onclick="backToList('cookies')">← Назад к списку</a>
-      <div class="recipe-card">
-        <div class="recipe-img-placeholder">Место для фото</div>
-        <div class="recipe-title">Шоколадное печенье</div>
-        <div class="recipe-desc">Классическое печенье с кусочками шоколада.</div>
-        <div class="recipe-body">Ингредиенты и способ приготовления...</div>
-      </div>
-    </div>
+    <p>Здесь пока нет рецептов 😊</p>
   </div>
 
   <div id="pastries" class="section">
@@ -204,29 +184,44 @@
   <script>
     function openCategory(id){
       const menu = document.getElementById('main-menu');
-      menu.classList.remove('show');
-      setTimeout(()=>{ menu.style.display='none'; }, 400);
+      menu.style.opacity = 0;
+      menu.style.transform = 'scale(0.8)';
+      setTimeout(()=>{ menu.style.display='none'; }, 500);
 
       const section = document.getElementById(id);
       section.style.display = 'block';
       setTimeout(()=> section.classList.add('show'), 10);
+
+      // меняем фон в зависимости от категории
+      if(id === 'cakes') document.body.style.background = 'linear-gradient(135deg, #fff1e0, #ffe6cc)';
+      else if(id === 'cookies') document.body.style.background = 'linear-gradient(135deg, #fbe8c5, #f3d6a0)';
+      else if(id === 'pastries') document.body.style.background = 'linear-gradient(135deg, #fff0f5, #ffe6f0)';
     }
 
     function backToMenu(){
       document.querySelectorAll('.section').forEach(sec => {
         sec.classList.remove('show');
-        setTimeout(()=> sec.style.display='none', 400);
-        sec.querySelectorAll('.recipe-detail').forEach(detail => detail.style.display='none');
-        sec.querySelectorAll('.recipe-list').forEach(list => list.style.display='flex');
+        setTimeout(()=> sec.style.display='none', 500);
+        sec.querySelectorAll('.recipe-detail').forEach(detail => detail.classList.remove('show'));
       });
       const menu = document.getElementById('main-menu');
       menu.style.display='flex';
-      setTimeout(()=> menu.classList.add('show'), 10);
+      setTimeout(()=> {
+        menu.style.opacity=1;
+        menu.style.transform='scale(1)';
+      }, 10);
+
+      // возвращаем основной фон
+      document.body.style.background = 'linear-gradient(135deg, #fff1e0, #ffe6cc)';
     }
 
     function showRecipe(recipeId, sectionId){
       const section = document.getElementById(sectionId);
-      section.querySelector('.recipe-list').style.display='none';
+      const list = section.querySelector('.recipe-list');
+      list.style.opacity=0;
+      list.style.transform='translateY(-20px)';
+      setTimeout(()=> list.style.display='none', 500);
+
       const recipe = section.querySelector('#'+recipeId);
       recipe.style.display='block';
       setTimeout(()=> recipe.classList.add('show'), 10);
@@ -234,11 +229,17 @@
 
     function backToList(sectionId){
       const section = document.getElementById(sectionId);
-      section.querySelector('.recipe-list').style.display='flex';
-      section.querySelectorAll('.recipe-detail').forEach(detail => {
+      const recipeDetails = section.querySelectorAll('.recipe-detail');
+      recipeDetails.forEach(detail => {
         detail.classList.remove('show');
-        setTimeout(()=> detail.style.display='none', 400);
+        setTimeout(()=> detail.style.display='none', 500);
       });
+      const list = section.querySelector('.recipe-list');
+      list.style.display='flex';
+      setTimeout(()=> {
+        list.style.opacity=1;
+        list.style.transform='translateY(0)';
+      }, 10);
     }
   </script>
 
