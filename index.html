@@ -8,12 +8,13 @@
     body {
       font-family: 'Segoe UI', Tahoma, sans-serif;
       margin: 0;
-      background-color: #fffaf6;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
       overflow-x: hidden;
+      background: linear-gradient(135deg, #fff1e0, #ffe6cc); /* десертный градиент */
+      background-size: cover;
     }
     .menu, .section {
       opacity: 0;
@@ -31,20 +32,20 @@
       gap: 1rem;
     }
     .menu button {
-      padding: 1rem 2rem;
-      font-size: 1.2rem;
+      padding: 0.8rem 2rem;
+      font-size: 1.1rem;
       border: none;
       border-radius: 12px;
       cursor: pointer;
-      background: linear-gradient(135deg, #f6d365, #fda085);
-      color: #fff;
+      background: #f6c89f; /* мягкий карамельный цвет */
+      color: #5a3e36;
       font-weight: bold;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
       transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
     .menu button:hover {
       transform: translateY(-3px);
-      box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.2);
     }
     .section {
       display: none;
@@ -91,7 +92,7 @@
     .recipe-title {
       font-weight: bold;
       font-size: 1.2rem;
-      color: #d98558;
+      color: #5a3e36;
     }
     .recipe-desc {
       font-size: 0.9rem;
@@ -156,7 +157,18 @@
         <div class="recipe-img-placeholder">Место для фото</div>
         <div class="recipe-title">Тарт «Абрикос-розмарин»</div>
         <div class="recipe-desc">Хрустящее песочное тесто, миндальный крем и компоте «Абрикос-розмарин».</div>
-        <div class="recipe-body">Ингредиенты и способ приготовления...</div>
+        <div class="recipe-body">
+          <strong>Базовое песочное тесто:</strong><br>
+          - Мука — 200 гр<br>
+          - Сливочное масло — 120 гр<br>
+          - Сахарная пудра — 80 гр<br>
+          - Миндальная мука — 30 гр<br>
+          - Яйца — 30 гр<br>
+          - Щепотка соли<br>
+          - Ваниль (по желанию)<br><br>
+          <strong>Приготовление:</strong><br>
+          Холодное сливочное масло нарезать кубиком и саблировать с мукой до мелкой крошки на средней скорости. Добавить сахарную пудру, миндальную муку, соль и ваниль. Влить яйца и вымешивать до образования комков. Песочное тесто нельзя вымешивать слишком долго, чтобы тесто оставалось нежным.
+        </div>
       </div>
     </div>
   </div>
