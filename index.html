@@ -15,6 +15,9 @@
       justify-content: center;
       background-color: #f0eae2;
       border-bottom: 1px solid #ddd;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
     }
     .tab {
       padding: 1rem 2rem;
@@ -22,6 +25,7 @@
       border: none;
       background: none;
       font-size: 1rem;
+      transition: all 0.3s ease;
     }
     .tab.active {
       font-weight: bold;
@@ -30,19 +34,57 @@
     .section {
       display: none;
       padding: 2rem;
+      animation: fadeIn 0.4s ease;
     }
     .section.active {
       display: block;
     }
-    .recipe-card {
+    .recipe-list, .recipe-detail {
+      max-width: 700px;
+      margin: auto;
+    }
+    .recipe-item {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: center;
+      margin-bottom: 1rem;
+      cursor: pointer;
+      overflow: hidden;
+      transition: transform 0.2s ease;
+    }
+    .recipe-item:hover {
+      transform: scale(1.02);
+    }
+    .recipe-thumb {
+      background-color: #f3f3f3;
+      width: 100px;
+      height: 100px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      color: #aaa;
+    }
+    .recipe-info {
+      padding: 1rem;
+    }
+    .recipe-title {
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+    .recipe-desc {
+      font-size: 0.9rem;
+      color: #555;
+    }
+    .recipe-detail .recipe-card {
       background-color: #ffffff;
       border-radius: 10px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
       padding: 1.5rem;
       margin-bottom: 2rem;
-      max-width: 700px;
-      margin-left: auto;
-      margin-right: auto;
     }
     .recipe-img-placeholder {
       background-color: #f3f3f3;
@@ -56,17 +98,21 @@
       color: #aaa;
       font-size: 1rem;
     }
-    .recipe-title {
-      font-size: 1.5rem;
-      margin-bottom: 0.5rem;
-    }
-    .recipe-desc {
-      font-style: italic;
+    .back-btn {
+      display: inline-block;
       margin-bottom: 1rem;
+      cursor: pointer;
+      color: #d98558;
+      font-weight: bold;
+      text-decoration: none;
+      transition: color 0.3s ease;
     }
-    .recipe-body {
-      white-space: pre-wrap;
-      line-height: 1.6;
+    .back-btn:hover {
+      color: #b56742;
+    }
+    @keyframes fadeIn {
+      from {opacity: 0; transform: translateY(10px);}
+      to {opacity: 1; transform: translateY(0);}
     }
   </style>
 </head>
@@ -77,20 +123,64 @@
     <button class="tab" onclick="showSection('pastries')">Пирожные</button>
   </div>
 
-  <div id="cookies" class="section">
-    <!-- Здесь будут рецепты печений -->
+  <!-- Секция печенья -->
+  <div id="cookies" class="section active">
+    <div class="recipe-list" id="cookies-list">
+      <div class="recipe-item" onclick="showRecipe('cookie1','cookies')">
+        <div class="recipe-thumb">Фото</div>
+        <div class="recipe-info">
+          <div class="recipe-title">Шоколадное печенье</div>
+          <div class="recipe-desc">Мягкое внутри, хрустящее снаружи...</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="recipe-detail" id="cookie1" style="display:none;">
+      <a class="back-btn" onclick="backToList('cookies')">← Назад к списку</a>
+      <div class="recipe-card">
+        <div class="recipe-img-placeholder">Место для фото</div>
+        <div class="recipe-title">Шоколадное печенье</div>
+        <div class="recipe-desc">
+          Классическое печенье с кусочками тёмного шоколада.
+        </div>
+        <div class="recipe-body">
+Ингредиенты:
+• Мука — 200 гр
+• Сливочное масло — 100 гр
+• Сахар — 120 гр
+• Яйцо — 1 шт
+• Кусочки шоколада — 100 гр
+
+Приготовление:
+Смешайте масло с сахаром, добавьте яйцо и муку. Вмешайте кусочки шоколада.
+Выложите ложкой на противень и выпекайте 10-12 минут при 180°С.
+        </div>
+      </div>
+    </div>
   </div>
 
-  <div id="cakes" class="section active">
-    <div class="recipe-card">
-      <div class="recipe-img-placeholder">Место для фото</div>
-      <div class="recipe-title">Тарт «Абрикос-розмарин»</div>
-      <div class="recipe-desc">
-        Мне кажется, он впитал всю энергию солнца!
-        Хрустящее, нежное песочное тесто, миндальный крем «франжипан», компоте «абрикос-розмарин» и крамбл с лепестками миндаля.
-        Всё лето можно экспериментировать с фруктами и ягодами :)
+  <!-- Секция торты -->
+  <div id="cakes" class="section">
+    <div class="recipe-list" id="cakes-list">
+      <div class="recipe-item" onclick="showRecipe('cake1','cakes')">
+        <div class="recipe-thumb">Фото</div>
+        <div class="recipe-info">
+          <div class="recipe-title">Тарт «Абрикос-розмарин»</div>
+          <div class="recipe-desc">Хрустящее тесто, миндальный крем и абрикосовый компоте...</div>
+        </div>
       </div>
-      <div class="recipe-body">
+    </div>
+
+    <div class="recipe-detail" id="cake1" style="display:none;">
+      <a class="back-btn" onclick="backToList('cakes')">← Назад к списку</a>
+      <div class="recipe-card">
+        <div class="recipe-img-placeholder">Место для фото</div>
+        <div class="recipe-title">Тарт «Абрикос-розмарин»</div>
+        <div class="recipe-desc">
+          Мне кажется, он впитал всю энергию солнца!
+          Хрустящее, нежное песочное тесто, миндальный крем «франжипан», компоте «абрикос-розмарин» и крамбл с лепестками миндаля.
+        </div>
+        <div class="recipe-body">
 Базовое песочное тесто:
 • Мука — 200 гр
 • Сливочное масло — 120 гр
@@ -100,24 +190,39 @@
 • Щепотка соли
 • Ваниль (по желанию)
 
-Холодное сливочное масло нарежьте кубиком и саблируйте с мукой: перетрите в мелкую крошку на средней скорости.
-Добавьте сахарную пудру и миндальную муку, соль, ваниль и смешайте. 
-Влейте яйца и вымешивайте ровно до тех пор, пока масса не начнет отходить от стенок и комковаться. Песочное тесто нельзя вымешивать слишком долго, иначе разовьется глютен и тесто будет грубым и жестким.
+Холодное сливочное масло нарежьте кубиком и саблируйте с мукой: перетрите в мелкую крошку.
+Добавьте сахарную пудру и миндальную муку, соль, ваниль и смешайте.
+Влейте яйца и вымешивайте ровно до тех пор, пока масса не начнет отходить от стенок и комковаться.
+        </div>
       </div>
     </div>
   </div>
 
+  <!-- Секция пирожные -->
   <div id="pastries" class="section">
-    <!-- Здесь будут рецепты пирожных -->
+    <div class="recipe-list">
+      <p>Здесь пока нет рецептов 😊</p>
+    </div>
   </div>
 
   <script>
     function showSection(id) {
       document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
       document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));
-      
       document.querySelector(`[onclick="showSection('${id}')"]`).classList.add('active');
       document.getElementById(id).classList.add('active');
+    }
+
+    function showRecipe(recipeId, sectionId) {
+      const section = document.getElementById(sectionId);
+      section.querySelector('.recipe-list').style.display = 'none';
+      section.querySelector(`#${recipeId}`).style.display = 'block';
+    }
+
+    function backToList(sectionId) {
+      const section = document.getElementById(sectionId);
+      section.querySelector('.recipe-list').style.display = 'block';
+      section.querySelectorAll('.recipe-detail').forEach(detail => detail.style.display = 'none');
     }
   </script>
 </body>
