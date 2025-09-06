@@ -3,39 +3,34 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Сайт рецептов</title>
+<title>Рецепты</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
 <style>
 body {
   font-family: Arial, sans-serif;
-  background-color: #121212; /* тёмный фон */
+  background-color: #121212;
   margin: 0;
   padding: 0;
-  color: #ffffff; /* белый текст */
-}
-header {
-  background-color: #1f1f1f;
-  color: #ff4c4c; /* красный акцент */
-  text-align: center;
-  padding: 20px 0;
-  font-size: 2em;
-  font-weight: bold;
+  color: #ffffff;
 }
 main {
   max-width: 900px;
-  margin: 20px auto;
+  margin: 50px auto;
   padding: 0 20px;
+  text-align: center; /* центрируем категории */
 }
 #categories {
-  text-align: center;
-  margin: 20px 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 40px;
 }
 #categories button {
-  margin: 5px;
-  padding: 10px 20px;
+  padding: 12px 25px;
   font-size: 1em;
   border: 2px solid #ff4c4c;
-  border-radius: 5px;
+  border-radius: 8px;
   background-color: #1f1f1f;
   color: #ffffff;
   cursor: pointer;
@@ -48,10 +43,11 @@ main {
 }
 .subcategory {
   margin: 15px 0;
+  text-align: left;
 }
 .subcategory-title {
   font-weight: bold;
-  color: #ff4c4c; /* красный акцент */
+  color: #ff4c4c;
   font-size: 1.2em;
   margin-bottom: 10px;
   border-bottom: 1px solid #ff4c4c;
@@ -63,7 +59,7 @@ main {
   align-items: flex-start;
   margin: 8px 0;
   padding: 12px 15px;
-  background-color: #1f1f1f; /* тёмная карточка */
+  background-color: #1f1f1f;
   border-radius: 8px;
   transition: transform 0.2s;
 }
@@ -96,15 +92,14 @@ main {
 .recipe-image {
   width: 120px;
   height: 120px;
-  background-color: #333333; /* цвет-заглушка */
-  border: 3px solid #ff4c4c; /* тёмная рамка с красным акцентом */
+  background-color: #333333;
+  border: 3px solid #ff4c4c;
   border-radius: 8px;
   object-fit: cover;
 }
 </style>
 </head>
 <body>
-<header>Сайт рецептов</header>
 <main>
   <div id="categories"></div>
   <div id="content"></div>
@@ -152,6 +147,7 @@ function createCategoryButtons() {
     if (e.target.tagName === 'BUTTON') {
       const cat = e.target.dataset.cat;
       displaySubcategories(cat);
+      window.scrollTo({ top: 0, behavior: 'smooth' }); // прокручиваем вверх
     }
   });
 }
