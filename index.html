@@ -8,14 +8,14 @@
 <style>
 body {
   font-family: Arial, sans-serif;
-  background-color: #fff8f0;
+  background-color: #121212; /* тёмный фон */
   margin: 0;
   padding: 0;
-  color: #333;
+  color: #ffffff; /* белый текст */
 }
 header {
-  background-color: #ff6f3c;
-  color: white;
+  background-color: #1f1f1f;
+  color: #ff4c4c; /* красный акцент */
   text-align: center;
   padding: 20px 0;
   font-size: 2em;
@@ -34,14 +34,16 @@ main {
   margin: 5px;
   padding: 10px 20px;
   font-size: 1em;
-  border: none;
+  border: 2px solid #ff4c4c;
   border-radius: 5px;
-  background-color: #ffefd5;
+  background-color: #1f1f1f;
+  color: #ffffff;
   cursor: pointer;
-  transition: background-color 0.3s, transform 0.2s;
+  transition: background-color 0.3s, color 0.3s, transform 0.2s;
 }
 #categories button:hover {
-  background-color: #ffe4c4;
+  background-color: #ff4c4c;
+  color: #ffffff;
   transform: scale(1.05);
 }
 .subcategory {
@@ -49,10 +51,10 @@ main {
 }
 .subcategory-title {
   font-weight: bold;
-  color: #ff6f3c;
+  color: #ff4c4c; /* красный акцент */
   font-size: 1.2em;
   margin-bottom: 10px;
-  border-bottom: 2px solid #ff6f3c;
+  border-bottom: 1px solid #ff4c4c;
   padding-bottom: 3px;
 }
 .recipe-card {
@@ -61,7 +63,7 @@ main {
   align-items: flex-start;
   margin: 8px 0;
   padding: 12px 15px;
-  background-color: #fff0e0;
+  background-color: #1f1f1f; /* тёмная карточка */
   border-radius: 8px;
   transition: transform 0.2s;
 }
@@ -71,7 +73,7 @@ main {
 .recipe-title {
   cursor: pointer;
   font-weight: bold;
-  color: #333;
+  color: #ffffff;
 }
 .recipe-content {
   flex: 1;
@@ -85,6 +87,7 @@ main {
   margin-top: 8px;
   font-size: 0.95em;
   line-height: 1.4em;
+  color: #dddddd;
 }
 .recipe-details.open {
   max-height: 500px;
@@ -93,8 +96,8 @@ main {
 .recipe-image {
   width: 120px;
   height: 120px;
-  background-color: #ffd9b3; /* цвет-заглушка */
-  border: 3px solid #333; /* тёмная рамка */
+  background-color: #333333; /* цвет-заглушка */
+  border: 3px solid #ff4c4c; /* тёмная рамка с красным акцентом */
   border-radius: 8px;
   object-fit: cover;
 }
@@ -128,7 +131,7 @@ fetch(sheetUrl)
           title: row['Title'] || 'Без названия',
           ingredients: row['Ingredients'] || 'Нет данных',
           instructions: row['Instructions'] || 'Нет данных',
-          image: row['Image'] || '' // ссылка на фото
+          image: row['Image'] || ''
         }));
         recipes.forEach(r => categories.add(r.category));
         createCategoryButtons();
@@ -191,7 +194,7 @@ function displaySubcategories(category) {
 
       const recipeImg = document.createElement('img');
       recipeImg.className = 'recipe-image';
-      recipeImg.src = r.image || ''; // если ссылка пустая, будет цвет-заглушка
+      recipeImg.src = r.image || '';
 
       recipeDiv.appendChild(recipeContent);
       recipeDiv.appendChild(recipeImg);
@@ -201,6 +204,10 @@ function displaySubcategories(category) {
     contentDiv.appendChild(subDiv);
   });
 }
+</script>
+</body>
+</html>
+
 </script>
 </body>
 </html>
