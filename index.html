@@ -56,21 +56,26 @@ main {
   padding-bottom: 3px;
 }
 .recipe-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
   margin: 8px 0;
   padding: 12px 15px;
   background-color: #fff0e0;
   border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: transform 0.2s;
 }
 .recipe-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 5px 12px rgba(0,0,0,0.15);
 }
 .recipe-title {
   cursor: pointer;
   font-weight: bold;
   color: #333;
+}
+.recipe-content {
+  flex: 1;
+  margin-right: 10px;
 }
 .recipe-details {
   max-height: 0;
@@ -84,6 +89,14 @@ main {
 .recipe-details.open {
   max-height: 500px;
   opacity: 1;
+}
+.recipe-image {
+  width: 120px;
+  height: 120px;
+  background-color: #ffd9b3; /* цвет-заглушка */
+  border: 3px solid #333; /* тёмная рамка */
+  border-radius: 8px;
+  object-fit: cover;
 }
 </style>
 </head>
@@ -114,7 +127,8 @@ fetch(sheetUrl)
           subcategory: row['Subcategory'] || 'Без подкатегории',
           title: row['Title'] || 'Без названия',
           ingredients: row['Ingredients'] || 'Нет данных',
-          instructions: row['Instructions'] || 'Нет данных'
+          instructions: row['Instructions'] || 'Нет данных',
+          image: row['Image'] || '' // ссылка на фото
         }));
         recipes.forEach(r => categories.add(r.category));
         createCategoryButtons();
@@ -155,6 +169,9 @@ function displaySubcategories(category) {
     filtered.filter(r => r.subcategory === sub).forEach(r => {
       const recipeDiv = document.createElement('div');
       recipeDiv.className = 'recipe-card';
+
+      const recipeContent = document.createElement('div');
+      recipeContent.className = 'recipe-content';
       const recipeTitle = document.createElement('div');
       recipeTitle.className = 'recipe-title';
       recipeTitle.textContent = r.title;
@@ -169,8 +186,15 @@ function displaySubcategories(category) {
         recipeTitle.scrollIntoView({ behavior: 'smooth', block: 'start' });
       });
 
-      recipeDiv.appendChild(recipeTitle);
-      recipeDiv.appendChild(recipeDetails);
+      recipeContent.appendChild(recipeTitle);
+      recipeContent.appendChild(recipeDetails);
+
+      const recipeImg = document.createElement('img');
+      recipeImg.className = 'recipe-image';
+      recipeImg.src = r.image || ''; // если ссылка пустая, будет цвет-заглушка
+
+      recipeDiv.appendChild(recipeContent);
+      recipeDiv.appendChild(recipeImg);
       subDiv.appendChild(recipeDiv);
     });
 
@@ -178,9 +202,5 @@ function displaySubcategories(category) {
   });
 }
 </script>
-</body>
-</html>
-
-  </script>
 </body>
 </html>
