@@ -62,34 +62,26 @@ main {
   opacity: 0;
   transform: translateY(20px);
   transition: opacity 0.5s ease, transform 0.5s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 .recipe-card.show {
   opacity: 1;
   transform: translateY(0);
 }
 .recipe-title {
-  position: relative;
   font-weight: bold;
   font-size: 1.4em;
-  color: #ffffff;
   padding: 15px;
   cursor: pointer;
-  background-size: cover;
-  background-position: center;
+  color: #ffffff;
+  border-bottom: 1px solid #ff4c4c;
 }
-.recipe-title::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0,0,0,0.5);
-  z-index: 0;
-}
-.recipe-title span {
-  position: relative;
-  z-index: 1;
+.recipe-content {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 .recipe-details {
   max-height: 0;
@@ -107,20 +99,33 @@ main {
   opacity: 1;
   padding: 15px;
 }
-.recipe-full-image {
+.recipe-image {
   width: 100%;
-  max-height: 400px;
+  max-height: 300px;
   object-fit: cover;
-  margin-top: 10px;
+  border: 2px solid #333333;
   border-radius: 8px;
   opacity: 0;
   transform: translateY(20px);
   transition: opacity 0.5s ease, transform 0.5s ease;
-  display: block;
 }
-.recipe-full-image.show {
+.recipe-image.show {
   opacity: 1;
   transform: translateY(0);
+}
+/* Для больших экранов текст и фото в ряд */
+@media(min-width: 700px) {
+  .recipe-content {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+  .recipe-details {
+    flex: 1;
+  }
+  .recipe-image {
+    width: 300px;
+    flex-shrink: 0;
+  }
 }
 </style>
 </head>
@@ -197,39 +202,42 @@ function displaySubcategories(category) {
 
       const recipeTitle = document.createElement('div');
       recipeTitle.className = 'recipe-title';
-      recipeTitle.style.backgroundImage = r.image ? `url(${r.image})` : 'linear-gradient(#333,#555)';
-      recipeTitle.innerHTML = `<span>${r.title}</span>`;
+      recipeTitle.textContent = r.title;
+
+      const recipeContent = document.createElement('div');
+      recipeContent.className = 'recipe-content';
 
       const recipeDetails = document.createElement('div');
       recipeDetails.className = 'recipe-details';
-      recipeDetails.textContent = r.instructions;
+      recipeDetails.innerHTML = r.instructions.replace(/\n/g,'<br>');
 
-      const recipeFullImage = document.createElement('img');
-      recipeFullImage.className = 'recipe-full-image';
-      recipeFullImage.src = r.image;
+      const recipeImage = document.createElement('img');
+      recipeImage.className = 'recipe-image';
+      recipeImage.src = r.image;
+
+      recipeContent.appendChild(recipeDetails);
+      recipeContent.appendChild(recipeImage);
 
       recipeTitle.addEventListener('click', () => {
         const open = recipeDetails.classList.toggle('open');
         if(open){
-          recipeFullImage.classList.add('show');
+          recipeImage.classList.add('show');
         } else {
-          recipeFullImage.classList.remove('show');
+          recipeImage.classList.remove('show');
         }
-        recipeTitle.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        recipeTitle.scrollIntoView({behavior:'smooth', block:'start'});
       });
 
       recipeDiv.appendChild(recipeTitle);
-      recipeDiv.appendChild(recipeDetails);
-      recipeDiv.appendChild(recipeFullImage);
+      recipeDiv.appendChild(recipeContent);
       subDiv.appendChild(recipeDiv);
       cards.push(recipeDiv);
     });
 
     contentDiv.appendChild(subDiv);
 
-    // плавное появление карточек с задержкой
     cards.forEach((card, index) => {
-      setTimeout(() => card.classList.add('show'), index * 150);
+      setTimeout(()=>card.classList.add('show'), index*150);
     });
   });
 }
