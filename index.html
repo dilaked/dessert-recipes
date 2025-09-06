@@ -1,225 +1,157 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Мои десерты</title>
-<style>
-body {
-  font-family: 'Segoe UI', Tahoma, sans-serif;
-  margin: 0;
-  padding: 2rem;
-  background: linear-gradient(135deg, #fff1e0, #ffe6cc);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-.menu, .section {
-  width: 100%;
-  max-width: 700px;
-}
-.menu {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  align-items: center;
-}
-.menu button {
-  padding: 0.8rem 2rem;
-  font-size: 1.1rem;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  background: #f6c89f;
-  color: #5a3e36;
-  font-weight: bold;
-}
-.section {
-  display: none;
-}
-.recipe-list {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-.recipe-item {
-  background: #fff;
-  border-radius: 12px;
-  display: flex;
-  cursor: pointer;
-}
-.recipe-thumb {
-  width: 100px;
-  height: 100px;
-  background: #f3f3f3;
-  border-radius: 12px 0 0 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #aaa;
-}
-.recipe-info {
-  padding: 1rem;
-}
-.recipe-title {
-  font-weight: bold;
-  color: #5a3e36;
-}
-.recipe-desc {
-  color: #555;
-  font-size: 0.9rem;
-}
-.recipe-detail {
-  display: none;
-}
-.recipe-card {
-  background: #fff;
-  border-radius: 12px;
-  padding: 1rem;
-  margin-bottom: 2rem;
-}
-.recipe-img-placeholder {
-  background: #f3f3f3;
-  width: 100%;
-  height: 200px;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #aaa;
-  margin-bottom: 1rem;
-}
-.back-btn {
-  display: inline-block;
-  margin-bottom: 1rem;
-  cursor: pointer;
-  color: #d98558;
-  font-weight: bold;
-  text-decoration: none;
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Сайт рецептов</title>
+  <style>
+    /* Общие стили */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #fff8f0;
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
+    header {
+      background-color: #ff6f3c;
+      color: white;
+      text-align: center;
+      padding: 20px 0;
+      font-size: 2em;
+      font-weight: bold;
+    }
+    main {
+      max-width: 1000px;
+      margin: 20px auto;
+      padding: 0 20px;
+    }
+    h2 {
+      color: #ff6f3c;
+    }
+
+    /* Таблица рецептов */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      padding: 10px;
+      border: 1px solid #ddd;
+      text-align: left;
+    }
+    th {
+      background-color: #ffefd5;
+    }
+    tr:hover {
+      background-color: #ffe4c4;
+    }
+
+    /* Форма поиска */
+    #search-container {
+      margin-top: 20px;
+      text-align: center;
+    }
+    #search-container input {
+      padding: 10px;
+      width: 60%;
+      max-width: 400px;
+      font-size: 1em;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    /* Рецепт при клике */
+    #recipe-display {
+      margin-top: 30px;
+      padding: 20px;
+      background-color: #fff0e0;
+      border-radius: 10px;
+      display: none;
+    }
+  </style>
 </head>
 <body>
+  <header>Сайт рецептов</header>
 
-<div class="menu" id="main-menu">
-  <button onclick="openCategory('cakes')">Торты</button>
-  <button onclick="openCategory('cookies')">Печенья</button>
-  <button onclick="openCategory('pastries')">Пирожные</button>
-</div>
-
-<div id="cakes" class="section">
-  <a class="back-btn" onclick="backToMenu()">← Назад к категориям</a>
-  <h2>Чизкейки</h2>
-  <div class="recipe-list">
-    <div class="recipe-item" onclick="showRecipe('cake1','cakes')">
-      <div class="recipe-thumb">Фото</div>
-      <div class="recipe-info">
-        <div class="recipe-title">Клубничный чизкейк</div>
-        <div class="recipe-desc">Простая песочная основа, курд из лайма, ванильный чизкейк без выпечки...</div>
-      </div>
+  <main>
+    <div id="search-container">
+      <input type="text" id="search" placeholder="Поиск рецепта...">
     </div>
-    <div class="recipe-item" onclick="showRecipe('cake2','cakes')">
-      <div class="recipe-thumb">Фото</div>
-      <div class="recipe-info">
-        <div class="recipe-title">Порционный чизкейк «Сникерс»</div>
-        <div class="recipe-desc">Нежные порционные чизкейки с арахисовой карамелью и шоколадной глазурью...</div>
-      </div>
+
+    <table id="recipes-table">
+      <thead>
+        <tr>
+          <th>Название</th>
+          <th>Ингредиенты</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Данные подгружаются через JS -->
+      </tbody>
+    </table>
+
+    <div id="recipe-display">
+      <h2 id="recipe-title"></h2>
+      <p id="recipe-ingredients"></p>
+      <p id="recipe-instructions"></p>
     </div>
-    <div class="recipe-item" onclick="showRecipe('cake3','cakes')">
-      <div class="recipe-thumb">Фото</div>
-      <div class="recipe-info">
-        <div class="recipe-title">Ягодный чизкейк</div>
-        <div class="recipe-desc">С хрустящей основой сабле, плотной сырной массой и ягодной прослойкой...</div>
-      </div>
-    </div>
-    <div class="recipe-item" onclick="showRecipe('cake4','cakes')">
-      <div class="recipe-thumb">Фото</div>
-      <div class="recipe-info">
-        <div class="recipe-title">Японский хлопковый чизкейк</div>
-        <div class="recipe-desc">Очень нежный, пышный, влажный, мягкий и пушистый...</div>
-      </div>
-    </div>
-  </div>
+  </main>
 
-  <div class="recipe-detail" id="cake1">
-    <a class="back-btn" onclick="backToList('cakes','cake1')">← Назад к списку</a>
-    <div class="recipe-card">
-      <div class="recipe-img-placeholder">Место для фото</div>
-      <h3>Клубничный чизкейк</h3>
-      <p>Простая песочная основа, курд из лайма, лёгкий ванильный чизкейк без выпечки на основе крема «Патисьер», ароматное клубничное компоте</p>
-      <p>Песочная основа: Печенье песочное («Юбилейное») — 130 гр., Сливочное масло — 60 гр...</p>
-      <p>Лаймовый курд: Сок лайма — 40 гр., Сок лимона — 25 гр., Яйцо — 2 шт., Сахар — 50 гр...</p>
-      <p>Масса для чизкейка: Молоко — 250 гр., Желток — 2 шт., Сахар — 70-90 гр...</p>
-      <p>Клубничное компоте: Клубника — 200 гр., Сахар — 30-50 гр., Цедра лайма...</p>
-    </div>
-  </div>
+  <script>
+    // Ссылка на Google таблицу в формате JSON
+    const sheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vR19INGiiRTmHTCvgsZkLsRDEY3V9XxwLX9R32Uw1XVABV_50w2kZpUMvwYfjD8f64WBzKRUQUed1Yf/pub?output=csv';
 
-  <div class="recipe-detail" id="cake2">
-    <a class="back-btn" onclick="backToList('cakes','cake2')">← Назад к списку</a>
-    <div class="recipe-card">
-      <div class="recipe-img-placeholder">Место для фото</div>
-      <h3>Порционный чизкейк «Сникерс»</h3>
-      <p>Нежные порционные чизкейки с арахисовой карамелью и шоколадной глазурью</p>
-      <p>Основа: Печенье юбилейное — 85 г, Жареный соленый арахис — 25 г, Масло сливочное — 40 г...</p>
-      <p>Начинка: Творожный сыр — 175 г, Арахисовая паста — 25-30 г, Сахар — 35 г...</p>
-      <p>Арахис в карамели: Жареный арахис — 100 г, Сливки 33% — 70 мл...</p>
-      <p>Глазурь: Молочный шоколад — 300 г, Растительное масло — 50 г...</p>
-    </div>
-  </div>
+    const tableBody = document.querySelector('#recipes-table tbody');
+    const searchInput = document.querySelector('#search');
+    const recipeDisplay = document.getElementById('recipe-display');
+    const recipeTitle = document.getElementById('recipe-title');
+    const recipeIngredients = document.getElementById('recipe-ingredients');
+    const recipeInstructions = document.getElementById('recipe-instructions');
 
-  <div class="recipe-detail" id="cake3">
-    <a class="back-btn" onclick="backToList('cakes','cake3')">← Назад к списку</a>
-    <div class="recipe-card">
-      <img src="images/Ягодный чизкейк.png" alt="Торт" style="width:100%; border-radius:12px; margin-bottom:1rem;">
-      <h3>Ягодный чизкейк</h3>
-      <p>С хрустящей основой сабле, с правильной сырной массой, нежной и плотной, яркой ягодной прослойкой</p>
-      <p>Основа: Мука — 80 гр, Какао-порошок — 8 гр, Миндальная мука — 12 гр...</p>
-      <p>Ягодное конфи: Черника — 120 гр, Сахар — 30 гр, Крахмал — 9 гр...</p>
-      <p>Сырная масса: Творожный сыр — 360 гр, Сахар — 90 гр, Желток — 100 гр, Сливки — 120 гр...</p>
-    </div>
-  </div>
+    let recipes = [];
 
-  <div class="recipe-detail" id="cake4">
-    <a class="back-btn" onclick="backToList('cakes','cake4')">← Назад к списку</a>
-    <div class="recipe-card">
-      <div class="recipe-img-placeholder">Место для фото</div>
-      <h3>Японский хлопковый чизкейк</h3>
-      <p>Очень нежный, влажный, пышный, мягкий и пушистый, тает во рту</p>
-      <p>Ингредиенты: Творожный сыр — 100 гр, Сливки 33% — 90 гр, Желток — 50 гр, Сахар — 16 гр, Мука — 40 гр, Крахмал — 16 гр, Белок — 80 гр, Сахар для белков — 40 гр...</p>
-      <p>Духовка: Нагреть до 190°C, затем водяная баня, 160-170°C, выпекать 40 мин, затем 140°C 20-30 мин, остудить</p>
-    </div>
-  </div>
+    // Загружаем данные из Google таблицы
+    fetch(sheetUrl)
+      .then(response => response.text())
+      .then(data => {
+        const rows = data.split('\n').slice(1); // пропускаем заголовок
+        recipes = rows.map(row => {
+          const cols = row.split(',');
+          return {
+            title: cols[0],
+            ingredients: cols[1],
+            instructions: cols[2] || 'Инструкции отсутствуют'
+          };
+        });
+        displayTable(recipes);
+      });
 
-</div>
+    function displayTable(list) {
+      tableBody.innerHTML = '';
+      list.forEach(recipe => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${recipe.title}</td><td>${recipe.ingredients}</td>`;
+        tr.addEventListener('click', () => showRecipe(recipe));
+        tableBody.appendChild(tr);
+      });
+    }
 
-<div id="cookies" class="section">
-  <a class="back-btn" onclick="backToMenu()">← Назад к категориям</a>
-  <p>Здесь пока нет рецептов 😊</p>
-</div>
+    function showRecipe(recipe) {
+      recipeTitle.textContent = recipe.title;
+      recipeIngredients.textContent = `Ингредиенты: ${recipe.ingredients}`;
+      recipeInstructions.textContent = `Инструкции: ${recipe.instructions}`;
+      recipeDisplay.style.display = 'block';
+      window.scrollTo({ top: recipeDisplay.offsetTop - 20, behavior: 'smooth' });
+    }
 
-<div id="pastries" class="section">
-  <a class="back-btn" onclick="backToMenu()">← Назад к категориям</a>
-  <p>Здесь пока нет рецептов 😊</p>
-</div>
-
-<script>
-function openCategory(id){
-  document.getElementById('main-menu').style.display='none';
-  document.getElementById(id).style.display='block';
-}
-function backToMenu(){
-  document.querySelectorAll('.section').forEach(sec => sec.style.display='none');
-  document.getElementById('main-menu').style.display='flex';
-}
-function showRecipe(recipeId, sectionId){
-  document.getElementById(sectionId).querySelector('.recipe-list').style.display='none';
-  document.getElementById(recipeId).style.display='block';
-}
-function backToList(sectionId, recipeId){
-  document.getElementById(recipeId).style.display='none';
-  document.getElementById(sectionId).querySelector('.recipe-list').style.display='flex';
-}
-</script>
-
+    // Фильтр по поиску
+    searchInput.addEventListener('input', () => {
+      const query = searchInput.value.toLowerCase();
+      const filtered = recipes.filter(r => r.title.toLowerCase().includes(query) || r.ingredients.toLowerCase().includes(query));
+      displayTable(filtered);
+    });
+  </script>
 </body>
 </html>
