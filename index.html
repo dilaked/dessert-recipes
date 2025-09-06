@@ -1,168 +1,104 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Сайт рецептов</title>
-<style>
-body {
-  font-family: Arial, sans-serif;
-  background-color: #fff8f0;
-  margin: 0;
-  padding: 0;
-  color: #333;
-}
-header {
-  background-color: #ff6f3c;
-  color: white;
-  text-align: center;
-  padding: 20px 0;
-  font-size: 2em;
-  font-weight: bold;
-}
-main {
-  max-width: 900px;
-  margin: 20px auto;
-  padding: 0 20px;
-}
-#categories {
-  text-align: center;
-  margin: 20px 0;
-}
-#categories button {
-  margin: 5px;
-  padding: 10px 15px;
-  font-size: 1em;
-  border: none;
-  border-radius: 5px;
-  background-color: #ffefd5;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-#categories button:hover {
-  background-color: #ffe4c4;
-}
-.subcategory, .recipe-card {
-  margin: 10px 0;
-  padding: 10px;
-  background-color: #fff0e0;
-  border-radius: 8px;
-}
-.subcategory-title {
-  font-weight: bold;
-  color: #ff6f3c;
-  cursor: default;
-}
-.recipe-title {
-  cursor: pointer;
-  color: #333;
-  margin: 5px 0;
-}
-.recipe-details {
-  max-height: 0;
-  opacity: 0;
-  overflow: hidden;
-  transition: max-height 0.4s ease, opacity 0.4s ease;
-  margin-left: 10px;
-}
-.recipe-details.open {
-  max-height: 500px;
-  opacity: 1;
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Сайт рецептов</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+  <style>
+    /* Ваши стили */
+  </style>
 </head>
 <body>
-<header>Сайт рецептов</header>
-<main>
-  <div id="categories"></div>
-  <div id="content"></div>
-</main>
+  <header>Сайт рецептов</header>
+  <main>
+    <div id="categories"></div>
+    <div id="content"></div>
+  </main>
 
-<script>
-const sheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vR19INGiiRTmHTCvgsZkLsRDEY3V9XxwLX9R32Uw1XVABV_50w2kZpUMvwYfjD8f64WBzKRUQUed1Yf/pub?output=csv';
-const categoriesDiv = document.getElementById('categories');
-const contentDiv = document.getElementById('content');
+  <script>
+    const sheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vR19INGiiRTmHTCvgsZkLsRDEY3V9XxwLX9R32Uw1XVABV_50w2kZpUMvwYfjD8f64WBzKRUQUed1Yf/pub?output=csv';
+    const categoriesDiv = document.getElementById('categories');
+    const contentDiv = document.getElementById('content');
 
-let recipes = [];
-let categories = new Set();
+    let recipes = [];
+    let categories = new Set();
 
-fetch(sheetUrl)
-  .then(res => res.text())
-  .then(data => {
-    const rows = data.split('\n').slice(1);
-    recipes = rows.map(row => {
-      const cols = row.split(',');
-      return {
-        category: cols[0]?.trim() || 'Нет категории',
-        subcategory: cols[1]?.trim() || 'Нет оглавления',
-        title: cols[2]?.trim() || 'Без названия',
-        ingredients: cols[3]?.trim() || 'Нет данных',
-        instructions: cols[4]?.trim() || 'Нет данных'
-      };
-    });
-    recipes.forEach(r => categories.add(r.category));
-    createCategoryButtons();
-  });
-
-function createCategoryButtons() {
-  categoriesDiv.innerHTML = '';
-  categories.forEach(cat => {
-    const btn = document.createElement('button');
-    btn.textContent = cat;
-    btn.dataset.cat = cat;
-    categoriesDiv.appendChild(btn);
-  });
-
-  categoriesDiv.addEventListener('click', e => {
-    if (e.target.tagName === 'BUTTON') {
-      const cat = e.target.dataset.cat;
-      displaySubcategories(cat);
-    }
-  });
-}
-
-function displaySubcategories(category) {
-  contentDiv.innerHTML = '';
-  const filtered = recipes.filter(r => r.category === category);
-  const subcategories = [...new Set(filtered.map(r => r.subcategory))];
-
-  subcategories.forEach(sub => {
-    const subDiv = document.createElement('div');
-    subDiv.className = 'subcategory';
-    const subTitle = document.createElement('div');
-    subTitle.className = 'subcategory-title';
-    subTitle.textContent = sub;
-    subDiv.appendChild(subTitle);
-
-    filtered.filter(r => r.subcategory === sub).forEach(r => {
-      const recipeDiv = document.createElement('div');
-      recipeDiv.className = 'recipe-card';
-      const recipeTitle = document.createElement('div');
-      recipeTitle.className = 'recipe-title';
-      recipeTitle.textContent = r.title;
-
-      const recipeDetails = document.createElement('div');
-      recipeDetails.className = 'recipe-details';
-      recipeDetails.innerHTML = `<p><strong>Ингредиенты:</strong> ${r.ingredients}</p>
-                                 <p><strong>Инструкции:</strong> ${r.instructions}</p>`;
-
-      recipeTitle.addEventListener('click', () => {
-        recipeDetails.classList.toggle('open');
-        recipeTitle.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    fetch(sheetUrl)
+      .then(res => res.text())
+      .then(data => {
+        Papa.parse(data, {
+          header: true,
+          skipEmptyLines: true,
+          complete: (result) => {
+            recipes = result.data.map(row => ({
+              category: row['Category'] || 'Без категории',
+              subcategory: row['Subcategory'] || 'Без подкатегории',
+              title: row['Title'] || 'Без названия',
+              ingredients: row['Ingredients'] || 'Нет данных',
+              instructions: row['Instructions'] || 'Нет данных'
+            }));
+            recipes.forEach(r => categories.add(r.category));
+            createCategoryButtons();
+          }
+        });
       });
 
-      recipeDiv.appendChild(recipeTitle);
-      recipeDiv.appendChild(recipeDetails);
-      subDiv.appendChild(recipeDiv);
-    });
+    function createCategoryButtons() {
+      categoriesDiv.innerHTML = '';
+      categories.forEach(cat => {
+        const btn = document.createElement('button');
+        btn.textContent = cat;
+        btn.dataset.cat = cat;
+        categoriesDiv.appendChild(btn);
+      });
 
-    contentDiv.appendChild(subDiv);
-  });
-}
-</script>
-</body>
-</html>
+      categoriesDiv.addEventListener('click', e => {
+        if (e.target.tagName === 'BUTTON') {
+          const cat = e.target.dataset.cat;
+          displaySubcategories(cat);
+        }
+      });
+    }
 
-</script>
+    function displaySubcategories(category) {
+      contentDiv.innerHTML = '';
+      const filtered = recipes.filter(r => r.category === category);
+      const subcategories = [...new Set(filtered.map(r => r.subcategory))];
+
+      subcategories.forEach(sub => {
+        const subDiv = document.createElement('div');
+        subDiv.className = 'subcategory';
+        const subTitle = document.createElement('div');
+        subTitle.className = 'subcategory-title';
+        subTitle.textContent = sub;
+        subDiv.appendChild(subTitle);
+
+        filtered.filter(r => r.subcategory === sub).forEach(r => {
+          const recipeDiv = document.createElement('div');
+          recipeDiv.className = 'recipe-card';
+          const recipeTitle = document.createElement('div');
+          recipeTitle.className = 'recipe-title';
+          recipeTitle.textContent = r.title;
+
+          const recipeDetails = document.createElement('div');
+          recipeDetails.className = 'recipe-details';
+          recipeDetails.innerHTML = `<p><strong>Ингредиенты:</strong> ${r.ingredients}</p>
+                                     <p><strong>Инструкции:</strong> ${r.instructions}</p>`;
+
+          recipeTitle.addEventListener('click', () => {
+            recipeDetails.classList.toggle('open');
+            recipeTitle.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          });
+
+          recipeDiv.appendChild(recipeTitle);
+          recipeDiv.appendChild(recipeDetails);
+          subDiv.appendChild(recipeDiv);
+        });
+
+        contentDiv.appendChild(subDiv);
+      });
+    }
+  </script>
 </body>
 </html>
