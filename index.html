@@ -1,157 +1,163 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Сайт рецептов</title>
-  <style>
-    /* Общие стили */
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #fff8f0;
-      margin: 0;
-      padding: 0;
-      color: #333;
-    }
-    header {
-      background-color: #ff6f3c;
-      color: white;
-      text-align: center;
-      padding: 20px 0;
-      font-size: 2em;
-      font-weight: bold;
-    }
-    main {
-      max-width: 1000px;
-      margin: 20px auto;
-      padding: 0 20px;
-    }
-    h2 {
-      color: #ff6f3c;
-    }
-
-    /* Таблица рецептов */
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-    }
-    th, td {
-      padding: 10px;
-      border: 1px solid #ddd;
-      text-align: left;
-    }
-    th {
-      background-color: #ffefd5;
-    }
-    tr:hover {
-      background-color: #ffe4c4;
-    }
-
-    /* Форма поиска */
-    #search-container {
-      margin-top: 20px;
-      text-align: center;
-    }
-    #search-container input {
-      padding: 10px;
-      width: 60%;
-      max-width: 400px;
-      font-size: 1em;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-    }
-
-    /* Рецепт при клике */
-    #recipe-display {
-      margin-top: 30px;
-      padding: 20px;
-      background-color: #fff0e0;
-      border-radius: 10px;
-      display: none;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Сайт рецептов</title>
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background-color: #fff8f0;
+  margin: 0;
+  padding: 0;
+  color: #333;
+}
+header {
+  background-color: #ff6f3c;
+  color: white;
+  text-align: center;
+  padding: 20px 0;
+  font-size: 2em;
+  font-weight: bold;
+}
+main {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 0 20px;
+}
+#categories {
+  margin: 20px 0;
+  text-align: center;
+}
+#categories button {
+  margin: 5px;
+  padding: 10px 15px;
+  font-size: 1em;
+  border: none;
+  border-radius: 5px;
+  background-color: #ffefd5;
+  cursor: pointer;
+}
+#categories button:hover {
+  background-color: #ffe4c4;
+}
+#recipe-list {
+  margin: 20px 0;
+}
+.recipe-btn {
+  display: block;
+  margin: 5px 0;
+  padding: 10px;
+  width: 100%;
+  text-align: left;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #fff0e0;
+  cursor: pointer;
+}
+.recipe-btn:hover {
+  background-color: #ffe4c4;
+}
+#recipe-display {
+  margin-top: 20px;
+  padding: 20px;
+  background-color: #fff0e0;
+  border-radius: 10px;
+  display: none;
+}
+#recipe-display h2 {
+  margin-top: 0;
+  color: #ff6f3c;
+}
+</style>
 </head>
 <body>
-  <header>Сайт рецептов</header>
+<header>Сайт рецептов</header>
+<main>
+  <div id="categories">
+    <!-- Кнопки категорий -->
+  </div>
 
-  <main>
-    <div id="search-container">
-      <input type="text" id="search" placeholder="Поиск рецепта...">
-    </div>
+  <div id="recipe-list">
+    <!-- Список названий рецептов -->
+  </div>
 
-    <table id="recipes-table">
-      <thead>
-        <tr>
-          <th>Название</th>
-          <th>Ингредиенты</th>
-        </tr>
-      </thead>
-      <tbody>
-        <!-- Данные подгружаются через JS -->
-      </tbody>
-    </table>
+  <div id="recipe-display">
+    <h2 id="recipe-title"></h2>
+    <p id="recipe-ingredients"></p>
+    <p id="recipe-instructions"></p>
+  </div>
+</main>
 
-    <div id="recipe-display">
-      <h2 id="recipe-title"></h2>
-      <p id="recipe-ingredients"></p>
-      <p id="recipe-instructions"></p>
-    </div>
-  </main>
+<script>
+const sheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vR19INGiiRTmHTCvgsZkLsRDEY3V9XxwLX9R32Uw1XVABV_50w2kZpUMvwYfjD8f64WBzKRUQUed1Yf/pub?output=csv';
 
-  <script>
-    // Ссылка на Google таблицу в формате JSON
-    const sheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vR19INGiiRTmHTCvgsZkLsRDEY3V9XxwLX9R32Uw1XVABV_50w2kZpUMvwYfjD8f64WBzKRUQUed1Yf/pub?output=csv';
+const categoriesDiv = document.getElementById('categories');
+const recipeListDiv = document.getElementById('recipe-list');
+const recipeDisplay = document.getElementById('recipe-display');
+const recipeTitle = document.getElementById('recipe-title');
+const recipeIngredients = document.getElementById('recipe-ingredients');
+const recipeInstructions = document.getElementById('recipe-instructions');
 
-    const tableBody = document.querySelector('#recipes-table tbody');
-    const searchInput = document.querySelector('#search');
-    const recipeDisplay = document.getElementById('recipe-display');
-    const recipeTitle = document.getElementById('recipe-title');
-    const recipeIngredients = document.getElementById('recipe-ingredients');
-    const recipeInstructions = document.getElementById('recipe-instructions');
+let recipes = [];
+let categories = new Set();
 
-    let recipes = [];
-
-    // Загружаем данные из Google таблицы
-    fetch(sheetUrl)
-      .then(response => response.text())
-      .then(data => {
-        const rows = data.split('\n').slice(1); // пропускаем заголовок
-        recipes = rows.map(row => {
-          const cols = row.split(',');
-          return {
-            title: cols[0],
-            ingredients: cols[1],
-            instructions: cols[2] || 'Инструкции отсутствуют'
-          };
-        });
-        displayTable(recipes);
-      });
-
-    function displayTable(list) {
-      tableBody.innerHTML = '';
-      list.forEach(recipe => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `<td>${recipe.title}</td><td>${recipe.ingredients}</td>`;
-        tr.addEventListener('click', () => showRecipe(recipe));
-        tableBody.appendChild(tr);
-      });
-    }
-
-    function showRecipe(recipe) {
-      recipeTitle.textContent = recipe.title;
-      recipeIngredients.textContent = `Ингредиенты: ${recipe.ingredients}`;
-      recipeInstructions.textContent = `Инструкции: ${recipe.instructions}`;
-      recipeDisplay.style.display = 'block';
-      window.scrollTo({ top: recipeDisplay.offsetTop - 20, behavior: 'smooth' });
-    }
-
-    // Фильтр по поиску
-    searchInput.addEventListener('input', () => {
-      const query = searchInput.value.toLowerCase();
-      const filtered = recipes.filter(r => r.title.toLowerCase().includes(query) || r.ingredients.toLowerCase().includes(query));
-      displayTable(filtered);
+fetch(sheetUrl)
+  .then(res => res.text())
+  .then(data => {
+    const rows = data.split('\n').slice(1);
+    recipes = rows.map(row => {
+      const cols = row.split(',');
+      const recipe = {
+        title: cols[0],
+        category: cols[1],
+        ingredients: cols[2] || 'Нет данных',
+        instructions: cols[3] || 'Нет данных'
+      };
+      categories.add(recipe.category);
+      return recipe;
     });
-  </script>
+    createCategoryButtons();
+    displayRecipeButtons(recipes);
+  });
+
+function createCategoryButtons() {
+  categoriesDiv.innerHTML = '<button data-cat="all">Все</button>';
+  categories.forEach(cat => {
+    const btn = document.createElement('button');
+    btn.textContent = cat;
+    btn.dataset.cat = cat;
+    categoriesDiv.appendChild(btn);
+  });
+
+  categoriesDiv.addEventListener('click', e => {
+    if (e.target.tagName === 'BUTTON') {
+      const cat = e.target.dataset.cat;
+      const filtered = cat === 'all' ? recipes : recipes.filter(r => r.category === cat);
+      displayRecipeButtons(filtered);
+      recipeDisplay.style.display = 'none';
+    }
+  });
+}
+
+function displayRecipeButtons(list) {
+  recipeListDiv.innerHTML = '';
+  list.forEach(recipe => {
+    const btn = document.createElement('button');
+    btn.textContent = recipe.title;
+    btn.className = 'recipe-btn';
+    btn.addEventListener('click', () => showRecipe(recipe));
+    recipeListDiv.appendChild(btn);
+  });
+}
+
+function showRecipe(recipe) {
+  recipeTitle.textContent = recipe.title;
+  recipeIngredients.textContent = `Ингредиенты: ${recipe.ingredients}`;
+  recipeInstructions.textContent = `Инструкции: ${recipe.instructions}`;
+  recipeDisplay.style.display = 'block';
+  recipeDisplay.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+</script>
 </body>
 </html>
